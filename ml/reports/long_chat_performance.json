@@ -1,0 +1,149 @@
+[
+    {
+        "turn": 1,
+        "latency": 21.849870681762695,
+        "risk_level": "LOW",
+        "risk_score": 0.0079,
+        "emotion": "surprise"
+    },
+    {
+        "turn": 2,
+        "latency": 4.998922348022461,
+        "risk_level": "LOW",
+        "risk_score": 0.0003,
+        "emotion": "joy"
+    },
+    {
+        "turn": 3,
+        "latency": 5.9947967529296875,
+        "risk_level": "LOW",
+        "risk_score": 0.0351,
+        "emotion": "sadness"
+    },
+    {
+        "turn": 4,
+        "latency": 4.011869430541992,
+        "risk_level": "LOW",
+        "risk_score": 0.0,
+        "emotion": "fear"
+    },
+    {
+        "turn": 5,
+        "latency": 3.429889678955078,
+        "risk_level": "LOW",
+        "risk_score": 0.0018,
+        "emotion": "joy"
+    },
+    {
+        "turn": 6,
+        "latency": 3.0069351196289062,
+        "risk_level": "LOW",
+        "risk_score": 0.0005,
+        "emotion": "sadness"
+    },
+    {
+        "turn": 7,
+        "latency": 3.973245620727539,
+        "risk_level": "LOW",
+        "risk_score": 0.0047,
+        "emotion": "joy"
+    },
+    {
+        "turn": 8,
+        "latency": 3.860950469970703,
+        "risk_level": "LOW",
+        "risk_score": 0.2086,
+        "emotion": "sadness"
+    },
+    {
+        "turn": 9,
+        "latency": 3.3719539642333984,
+        "risk_level": "LOW",
+        "risk_score": 0.0005,
+        "emotion": "joy"
+    },
+    {
+        "turn": 10,
+        "latency": 2.916097640991211,
+        "risk_level": "LOW",
+        "risk_score": 0.0,
+        "emotion": "joy"
+    },
+    {
+        "turn": 11,
+        "latency": 3.2279491424560547,
+        "risk_level": "LOW",
+        "risk_score": 0.0256,
+        "emotion": "sadness"
+    },
+    {
+        "turn": 12,
+        "latency": 3.450155258178711,
+        "risk_level": "MEDIUM",
+        "risk_score": 0.3089,
+        "emotion": "sadness"
+    },
+    {
+        "turn": 13,
+        "latency": 3.0663013458251953,
+        "risk_level": "LOW",
+        "risk_score": 0.0005,
+        "emotion": "joy"
+    },
+    {
+        "turn": 14,
+        "latency": 3.426790237426758,
+        "risk_level": "LOW",
+        "risk_score": 0.0,
+        "emotion": "fear"
+    },
+    {
+        "turn": 15,
+        "latency": 3.1061172485351562,
+        "risk_level": "MEDIUM",
+        "risk_score": 0.2629,
+        "emotion": "fear"
+    },
+    {
+        "turn": 16,
+        "latency": 3.0028820037841797,
+        "risk_level": "LOW",
+        "risk_score": 0.0238,
+        "emotion": "sadness"
+    },
+    {
+        "turn": 17,
+        "latency": 3.0481815338134766,
+        "risk_level": "HIGH",
+        "risk_score": 0.6336,
+        "emotion": "sadness"
+    },
+    {
+        "turn": 18,
+        "latency": 3.1061172485351562,
+        "risk_level": "LOW",
+        "risk_score": 0.0097,
+        "emotion": "joy"
+    },
+    {
+        "turn": 19,
+        "latency": 3.2939910888671875,
+        "risk_level": "LOW",
+        "risk_score": 0.017,
+        "emotion": "sadness"
+    },
+    {
+        "turn": 20,
+        "latency": 3.0069351196289062,
+        "risk_level": "HIGH",
+        "risk_score": 0.483,
+        "emotion": "sadness"
+    },
+    {
+        "turn": 21,
+        "latency": 2.836942672729492,
+        "risk_level": "LOW",
+        "risk_score": 0.0436,
+        "emotion": "sadness"
+    }
+]

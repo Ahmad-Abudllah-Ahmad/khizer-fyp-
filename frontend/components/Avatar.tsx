@@ -1,4 +1,7 @@
-import { motion } from 'framer-motion';
+import { useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { createAvatar } from '@dicebear/core';
+import { avataaars } from '@dicebear/collection';
 
 interface AvatarProps {
     emotion: string;
@@ -6,104 +9,115 @@ interface AvatarProps {
 }
 
 export default function Avatar({ emotion, isThinking }: AvatarProps) {
-    // Premium Color System
-    const getTheme = () => {
-        switch (emotion?.toLowerCase()) {
-            case 'sadness': return { primary: '#3b82f6', secondary: '#1e40af', glow: 'rgba(59, 130, 246, 0.5)' };
-            case 'joy': return { primary: '#fbbf24', secondary: '#d97706', glow: 'rgba(251, 191, 36, 0.5)' };
-            case 'anger': return { primary: '#ef4444', secondary: '#991b1b', glow: 'rgba(239, 68, 68, 0.5)' };
-            case 'fear': return { primary: '#8b5cf6', secondary: '#5b21b6', glow: 'rgba(139, 92, 246, 0.5)' };
-            case 'love': return { primary: '#f472b6', secondary: '#be185d', glow: 'rgba(244, 114, 182, 0.5)' };
-            default: return { primary: '#6366f1', secondary: '#4338ca', glow: 'rgba(99, 102, 241, 0.5)' }; // Serene
-        }
-    };
+    const avatarUri = useMemo(() => {
+        const getOptions = () => {
+            switch (emotion?.toLowerCase()) {
+                case 'joy': return {
+                    mouth: ['smile', 'laughing'],
+                    eyes: ['happy', 'wink'],
+                    eyebrows: ['default']
+                };
+                case 'sadness': return {
+                    mouth: ['sad', 'pucker'],
+                    eyes: ['squint', 'closed'],
+                    eyebrows: ['sadConcerned']
+                };
+                case 'anger': return {
+                    mouth: ['grimace', 'serious'],
+                    eyes: ['angry', 'side'],
+                    eyebrows: ['angry']
+                };
+                case 'fear': return {
+                    mouth: ['concerned', 'serious'],
+                    eyes: ['surprised', 'eyeRoll'],
+                    eyebrows: ['raisedExcitedNatural']
+                };
+                case 'love': return {
+                    mouth: ['smile', 'tongue'],
+                    eyes: ['hearts', 'happy'],
+                    eyebrows: ['defaultNatural']
+                };
+                default: return {
+                    mouth: ['smile', 'default'],
+                    eyes: ['default', 'eyeRoll'],
+                    eyebrows: ['default']
+                };
+            }
+        };
 
-    const theme = getTheme();
+        const options = getOptions() as any;
+        const avatar = createAvatar(avataaars, {
+            seed: 'SereneMind',
+            backgroundColor: ['b6e3f4', 'c0aede', 'd1d4f9'],
+            backgroundType: ['gradientLinear'],
+            mouth: options.mouth,
+            eyes: options.eyes,
+            eyebrows: options.eyebrows,
+            clothing: ['graphicShirt', 'hoodie', 'overall'],
+            top: ['shortHair', 'longHiTop', 'shaggyMullet', 'shortCurly'] as any,
+            hairColor: ['2e1505', '4e1b0b', 'b58143'],
+            accessories: ['round', 'prescription01'],
+            clothesColor: ['262e33', '65c9ff', '5199e4'],
+        });
+
+        return avatar.toDataUri();
+    }, [emotion]);
 
     return (
         <div className="relative w-32 h-32 flex items-center justify-center translate-z-0">
-            {/* Organic Glow Layer */}
+            {/* Thinking / Breath Animation */}
             <motion.div
-                className="absolute inset-0 blur-3xl rounded-full"
+                className="absolute inset-0 blur-3xl rounded-full bg-indigo-500/20"
                 animate={{
-                    scale: isThinking ? [1, 1.2, 1] : [1, 1.1, 1],
-                    opacity: [0.2, 0.4, 0.2]
+                    scale: isThinking ? [1, 1.3, 1] : [1, 1.1, 1],
+                    opacity: [0.3, 0.6, 0.3]
                 }}
                 transition={{ duration: 4, repeat: Infinity }}
-                style={{ background: theme.primary }}
             />
 
-            {/* Liquid Blob Container */}
-            <div className="relative w-full h-full filter-liquid overflow-visible">
-                <svg viewBox="0 0 200 200" className="w-full h-full">
-                    <defs>
-                        <filter id="liquid-filter">
-                            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-                            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="liquid" />
-                        </filter>
-                        <linearGradient id="blob-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor={theme.primary} />
-                            <stop offset="100%" stopColor={theme.secondary} />
-                        </linearGradient>
-                    </defs>
+            {/* Main Avatar Display */}
+            <motion.div
+                className="relative w-full h-full rounded-full overflow-hidden border-2 border-white/10 shadow-2xl bg-slate-900"
+                initial={false}
+                animate={{
+                    scale: isThinking ? 0.95 : 1,
+                    rotate: isThinking ? [0, -2, 2, 0] : 0
+                }}
+                transition={{
+                    scale: { type: "spring", stiffness: 300, damping: 20 },
+                    rotate: { repeat: Infinity, duration: 2 }
+                }}
+            >
+                <AnimatePresence mode="wait">
+                    <motion.img
+                        key={emotion}
+                        src={avatarUri}
+                        alt="SereneMind AI Avatar"
+                        className="w-full h-full object-cover"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.1 }}
+                        transition={{ duration: 0.4 }}
+                    />
+                </AnimatePresence>
 
-                    <g filter="url(#liquid-filter)">
-                        {/* Main Morphing Body */}
-                        <motion.circle
-                            cx="100" cy="100" r="65"
-                            fill="url(#blob-gradient)"
-                            animate={{
-                                cx: isThinking ? [100, 105, 95, 100] : [100, 102, 98, 100],
-                                cy: isThinking ? [100, 95, 105, 100] : [100, 102, 98, 100],
-                                r: isThinking ? [65, 60, 68, 65] : [65, 63, 67, 65]
-                            }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                        />
+                {/* Glassmorphic Overlay */}
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-white/5 to-transparent mix-blend-overlay" />
+            </motion.div>
 
-                        {/* Secondary Satellites for Liquid Effect */}
-                        {[1, 2, 3].map((i) => (
-                            <motion.circle
-                                key={i}
-                                cx="100" cy="100" r="30"
-                                fill="url(#blob-gradient)"
-                                animate={{
-                                    x: isThinking ? [0, i * 15, -i * 15, 0] : [0, i * 5, -i * 5, 0],
-                                    y: isThinking ? [0, -i * 15, i * 15, 0] : [0, -i * 5, i * 5, 0],
-                                    scale: [1, 1.2, 0.8, 1]
-                                }}
-                                transition={{
-                                    duration: 4 + i,
-                                    repeat: Infinity,
-                                    ease: "easeInOut",
-                                    delay: i * 0.5
-                                }}
-                            />
-                        ))}
-                    </g>
-
-                    {/* Minimal Face Overlay (outside filter for clarity) */}
-                    <g className="drop-shadow-sm">
-                        <motion.path
-                            d={emotion === 'joy' ? "M70 110 Q100 135 130 110" :
-                                emotion === 'sadness' ? "M75 125 Q100 110 125 125" :
-                                    "M80 115 Q100 115 120 115"}
-                            stroke="white" strokeWidth="4" strokeLinecap="round" fill="none"
-                            animate={{ opacity: isThinking ? 0.3 : 0.8 }}
+            {/* Thinking Indicator Dots */}
+            {isThinking && (
+                <div className="absolute -bottom-2 flex gap-1 bg-slate-800 px-2 py-1 rounded-full border border-slate-700 shadow-lg">
+                    {[0, 1, 2].map((i) => (
+                        <motion.div
+                            key={i}
+                            className="w-1.5 h-1.5 bg-indigo-400 rounded-full"
+                            animate={{ opacity: [0.3, 1, 0.3] }}
+                            transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
                         />
-                        {/* Eyes */}
-                        <motion.circle
-                            cx="75" cy="90" r="3" fill="white"
-                            animate={{ scaleY: isThinking ? [1, 0.1, 1] : 1 }}
-                            transition={{ repeat: Infinity, duration: 3, delay: 1 }}
-                        />
-                        <motion.circle
-                            cx="125" cy="90" r="3" fill="white"
-                            animate={{ scaleY: isThinking ? [1, 0.1, 1] : 1 }}
-                            transition={{ repeat: Infinity, duration: 3, delay: 1.1 }}
-                        />
-                    </g>
-                </svg>
-            </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }
