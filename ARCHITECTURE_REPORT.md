@@ -9,7 +9,7 @@ SereneMind is a production-grade AI ecosystem designed to provide empathetic men
 
 The system is built on a "Stateless-First" microservices philosophy. Each component is an independent, containerized unit that communicates via high-speed RESTful APIs.
 
-### Diagram 1: High-Level System Architecture
+### Diagram 1: High-Level System Architecture (Unified v4)
 ```mermaid
 graph TD
     User([User Client]) <--> UI[Next.js 14 Frontend]
@@ -20,10 +20,9 @@ graph TD
         Proxy <--> AV[Avatar Response Service]
     end
     
-    subgraph "Model Storage"
-        AI --> EM[Emotion Model .joblib]
-        AI --> CM[Crisis Model .joblib]
-        AI --> MH[Mental Health Model .joblib]
+    subgraph "Unified Model v4 (Production)"
+        AI --> UM[unified_mental_health.joblib]
+        UM --> INF[9-Class Inference Engine]
     end
     
     subgraph "Data Services (Stateless)"
@@ -36,14 +35,14 @@ graph TD
 
 ## 2. Containerization Strategy (Docker)
 
-Each service in SereneMind is containerized using multi-stage Silicon-optimized Dockerfiles. This ensures that the Python ML environments and Node.js frontend environments are minimal, secure, and reproducible.
+Each service in SereneMind is containerized using multi-stage Silicon-optimized Dockerfiles.
 
 ### Diagram 2: Docker Image Layering Strategy (Optimization)
 ```mermaid
 graph LR
     Base[Alpine/Slim Base] --> Deps[Dependency Layer - pip/npm install]
     Deps --> Code[Source Code Layer]
-    Code --> Run[Runtime Layer - 50MB per ML Model]
+    Code --> Run[Runtime Layer - 5.6MB Unified Model]
     
     subgraph "Size Optimization"
         Run --> Dist[Distroless-style Slimmed Images]
@@ -61,8 +60,8 @@ sequenceDiagram
     D->>F: Start Port 3000
     D->>A: Start Port 8000
     D->>V: Start Port 8001
-    F->>A: POST /api/ai/analyze
-    A-->>F: JSON (Emotion/Crisis)
+    F->>A: POST /analyze/journal
+    A-->>F: JSON (9-Class Unified Response)
     F->>V: POST /api/avatar/respond
     V-->>F: JSON (Chat Response)
 ```
@@ -71,7 +70,7 @@ sequenceDiagram
 
 ## 3. Kubernetes Orchestration (Local & Cloud)
 
-SereneMind is designed to run on K8s (Kubernetes) to handle traffic spikes (e.g., world-crisis events). 
+SereneMind is designed to run on K8s (Kubernetes) to handle traffic spikes.
 
 ### Diagram 4: Kubernetes Cluster Topology
 ```mermaid
@@ -105,80 +104,93 @@ graph LR
 
 ---
 
-## 4. AI Model Lifecycle & Workflow
+## 4. AI Model Architecture — Unified v4 (Breakthrough)
 
-The SereneMind mission relies on three primary ML models working in a pipeline.
+The SereneMind mission utilizes a single high-performance model handling all dimensions of mental health.
 
-- **Emotion Classification**: High-recall TF-IDF analysis.
-- **Crisis Detection**: Full-sentence semantic analysis (Model-First) accurately distinguishing resilient sadness from active suicidal ideation.
-- **Mental Health Triage**: Multi-label classification for stress, anxiety, and depression.
-
-### Diagram 6: AI Inference Pipeline (Sequence)
+### Diagram 6: Unified Model v4 Inference Stack
 ```mermaid
-sequenceDiagram
-    participant J as Journal Entry
-    participant E as Emotion Analyzer
-    participant C as Crisis Detector
-    participant M as MH Classifier
-    
-    J->>E: Process Text
-    E-->>C: Sent Emotion Labels
-    C->>C: Emotion-Aware Calibration
-    C-->>M: Predict Mental State
-    M-->>J: Return 3-Dimensional Unified Analysis
+graph TD
+    TXT[User Journal Entry] --> CLIP[Text Clipping: 2000 chars]
+    CLIP --> TFIDF[TF-IDF: word 1-4g + char 2-5g]
+    TFIDF --> FEAT[70,000 Feature Matrix]
+    FEAT --> LBFGS[L-BFGS Logistic Regression]
+    LBFGS --> CAL[Isotonic Calibration]
+    CAL --> OUT[9-Class Probability Scores]
 ```
 
-### Diagram 7: Model Training & Deployment Workflow
+### Diagram 7: Model Training & Deployment Workflow (L-BFGS)
 ```mermaid
 stateDiagram-v2
-    [*] --> RawData: Local Datasets
-    RawData --> Preprocess: Clean/Tokenize
-    Preprocess --> FeatureEng: TF-IDF Vectorization
-    FeatureEng --> Training: Logistic Regression
-    Training --> Evaluation: Confusion Matrix / Loss
-    Evaluation --> Export: .joblib (Stateless)
+    [*] --> RawData: Multi-Source Datasets
+    RawData --> Balancing: Class Weighting + Seed Anchor
+    Balancing --> Preprocess: Clean/Tokenize
+    Preprocess --> FeatureEng: FeatureUnion (word+char)
+    FeatureEng --> Training: L-BFGS Solver
+    Training --> Evaluation: Calibrated F1 Metrics
+    Evaluation --> Export: .joblib Bundle
     Export --> DockerBuild: Contextual Image
     DockerBuild --> [*]
 ```
 
+### Diagram 8: Advanced Data Merging Pipeline (New)
+```mermaid
+graph LR
+    EM[Emotion Dataset] --> MERGE[Merge Engine]
+    GO[GoEmotions] --> MERGE
+    MH[MH Conversations] --> MERGE
+    SEN[Sentiment Data] --> MERGE
+    SEED[Clinical Seed] --> MERGE
+    
+    MERGE --> CLEAN[Text Cleaning]
+    CLEAN --> BAL[Balanced Sampling / Capping]
+    BAL --> FINAL[100k+ Training Samples]
+```
+
+### Diagram 9: 9-Class Categorization Schema (New)
+```mermaid
+graph TD
+    INPUT[Raw Labels] --> MAP[Label Mapping Logic]
+    MAP --> CRIS[Crisis]
+    MAP --> DEPR[Depression]
+    MAP --> ANX[Anxiety]
+    MAP --> STRS[Stress]
+    MAP --> GRIF[Grief]
+    MAP --> FEAR[Fear]
+    MAP --> ANGR[Anger]
+    MAP --> JOY[Joy]
+    MAP --> NORM[Normal/Stable]
+```
+
 ---
 
-## 5. Detailed Model Evaluation
+## 5. Model Performance Distribution
 
-We evaluate our "Bulky" vs "Lightweight" models on three key dimensions: Accuracy, Latency, and Memory Footprint.
-
-| Model | Technique | Accuracy | Latency | Size |
-| :--- | :--- | :--- | :--- | :--- |
-| **Emotion Model** | TF-IDF + LogReg | 86.8% | 5ms | 2.3MB |
-| **Crisis Model** | Calibrated Logistic | 93.3% | 4ms | 1.6MB |
-| **Mental Health** | NLP Keyword Engine | 98.4% | 3ms | 1.1MB |
-
-### Diagram 8: Model Performance Distribution (Entropy)
+### Diagram 10: Inference Accuracy Spread (Unified v4)
 ```mermaid
-pie title Inference Accuracy Spread
-    "True Positive (Emotion)" : 87
-    "True Positive (Crisis)" : 93
-    "True Positive (MH)" : 98
-    "False Positive / Error" : 4
+pie title Per-Class Reliability (F1 Score)
+    "Crisis (SuicideWatch)" : 72
+    "Anxiety" : 98
+    "Grief" : 99
+    "Normal/Joy" : 75
+    "Other Classes" : 60
 ```
 
 ---
 
 ## 6. Request-Response Lifecycle (WhatsApp Style)
 
-To ensure the "WhatsApp-style" chat experience, we implemented a sophisticated asynchronous UI pipeline.
-
-### Diagram 9: Frontend State Synchronisation
+### Diagram 11: Frontend State Synchronisation
 ```mermaid
 graph TD
     Submit[Submit Entry] --> LocalUI[Append Local Message]
     LocalUI --> API[API Analyze Call]
     API -->|Async| Droplet[Show Thinking Dots]
-    Droplet --> Result[Receive Metrics]
-    Result --> Final[Render Avatar & Analysis Dropdown]
+    Droplet --> Result[Receive Unified Response]
+    Result --> Final[Render Calibrated Metrics]
 ```
 
-### Diagram 10: Auto-Scroll Anchor Logic
+### Diagram 12: Auto-Scroll Anchor Logic
 ```mermaid
 graph LR
     NewMsg[New Message Received] --> HeightChange[DOM Height Change]
@@ -191,9 +203,7 @@ graph LR
 
 ## 7. Security & Privacy Architecture
 
-SereneMind prioritizes user privacy through local processing and stateless APIs.
-
-### Diagram 11: Security Boundary Diagram
+### Diagram 13: Security Boundary Diagram
 ```mermaid
 graph TD
     Public([Public Internet]) -- HTTPS/SSL --> Gateway[API Gateway]
@@ -209,7 +219,7 @@ graph TD
     end
 ```
 
-### Diagram 12: CI/CD "Zero-Downtime" Deployment
+### Diagram 14: CI/CD "Zero-Downtime" Deployment
 ```mermaid
 graph LR
     Git[GitHub Push] --> Test[PyTest / NPM Test]
@@ -223,9 +233,7 @@ graph LR
 
 ## 8. Scaling to "Bulky" Large Language Models (LLMs)
 
-While the current deployment uses high-speed lightweight models, the architecture is designed to swap in "Bulky" high-parameter models (e.g., Llama-3-70B or Fine-tuned RoBERTa-Large) for deeper clinical analysis.
-
-### Diagram 13: Bulky Model Deployment & GPU Acceleration
+### Diagram 15: Bulky Model Deployment & GPU Acceleration
 ```mermaid
 graph TD
     Queue[Request Queue - Redis/RabbitMQ] --> Dist[Distributed Inference Workers]
@@ -241,20 +249,14 @@ graph TD
     Batch --> Response[Aggregated Clinical PDF Report]
 ```
 
-- **Inference Technique**: Quantized (INT8/FP16) weight loading via vLLM or TensorRT.
-- **Hardware Requirement**: Minimum 40GB A100/H100 GPU for bulky model inference.
-- **Workflow**: Asynchronous processing with a callback URL for heavy model generation.
-
 ---
 
-## 9. Development Environment (Lightweight Phase)
-
-For rapid development, we utilize a stateless, database-free architecture that allows the entire ecosystem to run on a single machine without Docker overhead while maintaining the same API contracts as the production K8s cluster.
+## 9. Development Environment
 
 - **Frontend**: Next.js 14 (Port 3000)
-- **AI Service**: FastAPI / Scikit-Learn (Port 8000)
+- **AI Service**: FastAPI / Unified Model v4 (Port 8000)
 - **Avatar Service**: FastAPI / Response Generator (Port 8001)
 
 ---
-*Report Generated: 2026-02-20*
+*Report Generated: 2026-02-22*
 *Author: SereneMind Engineering Team*
