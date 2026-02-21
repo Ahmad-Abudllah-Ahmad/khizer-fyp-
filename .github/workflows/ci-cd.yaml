@@ -17,22 +17,21 @@ jobs:
       with:
         node-version: '20'
 
-    - name: Install & Test Auth Service
-      run: |
-        cd services/auth-service
-        npm ci
-        npm test
-
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
 
-    - name: Test AI Service
+    - name: Install & Test AI Service
       run: |
         cd services/ai-service
         pip install -r requirements.txt
-        # pytest (Skipping for now as tests require models)
+        PYTHONPATH=. pytest -v
+
+    - name: Install Avatar Service Dependencies
+      run: |
+        cd services/avatar-service
+        pip install -r requirements.txt
 
     - name: Security Scan (Trivy)
       uses: aquasecurity/trivy-action@master
@@ -53,6 +52,6 @@ jobs:
     # Placeholder for Docker Hub login and build-push
     - name: Build Docker Images
       run: |
-        docker build -t serenemind/auth-service:latest ./services/auth-service
+        docker build -t serenemind/ai-service:latest ./services/ai-service
+        docker build -t serenemind/avatar-service:latest ./services/avatar-service
         docker build -t serenemind/frontend:latest ./frontend
-        # ... others

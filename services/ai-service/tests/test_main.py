@@ -10,22 +10,19 @@ def test_health_check():
 
 def test_analyze_journal():
     with TestClient(app) as client:
-        # Mocking the model response would be better, but for integration:
+        # Test positive entry
         response = client.post("/analyze/journal", json={"text": "I am feeling very happy today!", "language": "en"})
         assert response.status_code == 200
         data = response.json()
-        assert "emotion" in data
-        assert "crisis" in data
-        # Note: Model prediction might vary, so we check structure primarily
-        assert "emotion" in data["emotion"]
-        assert "confidence" in data["emotion"]
+        assert "unified" in data
+        assert data["unified"]["emotion"] == "joy"
+        assert data["unified"]["crisis_risk"] == "LOW"
 
-def test_crisis_detection():
     with TestClient(app) as client:
-        response = client.post("/predict/crisis", json={"text": "I want to end it all"})
+        # Test crisis entry
+        response = client.post("/analyze/journal", json={"text": "I want to kill myself"})
         assert response.status_code == 200
         data = response.json()
-        # Crisis endpoint returns direct result (probability)
-        assert "crisis_probability" in data
-        # risk_level is calculated in analyze endpoint, not here
+        assert data["unified"]["crisis_risk"] == "CRISIS"
+        assert data["unified"]["requires_immediate_action"] is True
 
