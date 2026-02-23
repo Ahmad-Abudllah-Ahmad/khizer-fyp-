@@ -10,9 +10,6 @@ __pycache__/
 *.pyc
 
 # Environment & IDE
-.env
-.env.local
-.vscode/
 .idea/
 .DS_Store
 
@@ -28,3 +25,4 @@ yarn-debug.log*
 yarn-error.log*
 .npm
 .eslintcache
+config.bat

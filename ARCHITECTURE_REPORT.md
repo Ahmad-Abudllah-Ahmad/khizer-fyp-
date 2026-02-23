@@ -169,11 +169,15 @@ graph TD
 ### Diagram 10: Inference Accuracy Spread (Unified v4)
 ```mermaid
 pie title Per-Class Reliability (F1 Score)
-    "Crisis (SuicideWatch)" : 72
-    "Anxiety" : 98
-    "Grief" : 99
-    "Normal/Joy" : 75
-    "Other Classes" : 60
+    "Anxiety (93.7%)" : 94
+    "Grief (99.0%)" : 99
+    "Crisis (70.1%)" : 70
+    "Normal (69.8%)" : 70
+    "Joy (77.5%)" : 78
+    "Fear (70.1%)" : 70
+    "Depression (69.4%)" : 69
+    "Anger (52.4%)" : 52
+    "Stress (36.2%)" : 36
 ```
 
 ---
@@ -258,5 +262,5 @@ graph TD
 - **Avatar Service**: FastAPI / Response Generator (Port 8001)
 
 ---
-*Report Generated: 2026-02-22*
+*Report Generated: 2026-02-23*
 *Author: SereneMind Engineering Team*
